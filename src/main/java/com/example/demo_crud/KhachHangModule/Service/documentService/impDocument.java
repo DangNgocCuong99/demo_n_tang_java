@@ -15,6 +15,7 @@ import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardCopyOption;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.zip.ZipEntry;
@@ -48,10 +49,9 @@ public class impDocument implements documentService {
         }
     }
 
-    @Override
-    public customResponse uploadFile(MultipartFile file) {
+    private String uploadFile(MultipartFile file) {
         if (file.isEmpty()) {
-            return new customResponse("Please select a file to upload.");
+            throw new IllegalArgumentException("Please select a file to upload.");
         }
 
         try {
@@ -72,10 +72,11 @@ public class impDocument implements documentService {
 
             // Tạo URL để truy cập tệp tin
             String fileUrl = "/uploads/" + newFileName;
+//            return new customResponse("http://192.168.1.44:8082/document" + fileUrl);
 
-            return new customResponse("http://192.168.1.44:8082/document" + fileUrl);
+            return newFileName;
         } catch (IOException e) {
-            return new customResponse("Failed to upload file: " + e.getMessage());
+            throw new IllegalArgumentException("Failed to upload file: " + e.getMessage());
         }
     }
 
@@ -166,6 +167,7 @@ public class impDocument implements documentService {
         }
         documentEntity documentGot = document.get();
         System.out.println(documentGot);
+        documentRepository.deleteById(documentGot.getId());
 
         List<DocumentInterface> listChild = documentRepository.findByParentDocumentId(documentGot.getId());
 
@@ -187,6 +189,26 @@ public class impDocument implements documentService {
         List<DocumentInterface> listChild = documentRepository.findByParentDocumentId(documentGot.getId());
 
         return new documentResponse(documentGot.getId(), documentGot.getName(), documentGot.getType(), Optional.ofNullable(documentGot.getParentDocument().getId()), listChild);
+    }
+
+    @Override
+    public documentResponse createFile(MultipartFile file , long parentId){
+        Optional<documentEntity> documentParent = documentRepository.findById(parentId);
+        if (documentParent.isEmpty()) {
+            throw new IllegalArgumentException("Not Found");
+        }
+        documentEntity documentParentGot = documentParent.get();
+
+        String fileName = uploadFile(file);
+        documentEntity documentNew = new documentEntity();
+        documentNew.setParentDocument(documentParentGot);
+        documentNew.setName(fileName);
+        documentNew.setType("file");
+        documentNew.setUrl("http://192.168.1.44:8082/document/uploads/"+fileName);
+
+        documentEntity documentSave = documentRepository.save(documentNew);
+
+        return new documentResponse(documentSave.getId(),documentSave.getName(),documentSave.getType(), Optional.ofNullable(documentSave.getParentDocument().getId()),new ArrayList<>());
     }
 
 }

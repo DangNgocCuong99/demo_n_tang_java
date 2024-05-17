@@ -31,10 +31,10 @@ public class documentController {
 
     private static final String ZIP_FILE_NAME = "va1.zip";
 
-    @PostMapping("/upload")
-    public ResponseEntity<?> uploadFiles(@RequestParam("file") MultipartFile file){
-        return new ResponseEntity<>(documentService.uploadFile(file), HttpStatus.OK);
-    }
+//    @PostMapping("/upload")
+//    public ResponseEntity<?> uploadFiles(@RequestParam("file") MultipartFile file){
+//        return new ResponseEntity<>(documentService.uploadFile(file), HttpStatus.OK);
+//    }
 
     @GetMapping("/uploads/{fileName:.+}")
     public ResponseEntity<Resource> downloadFile(@PathVariable String fileName) {
@@ -97,6 +97,11 @@ public class documentController {
     @PutMapping("/update/{id}")
     public ResponseEntity<?> update(@PathVariable Long id,@RequestBody updateDocumentRequest document) {
         return new ResponseEntity<>(documentService.updateDocument(id,document.getName()), HttpStatus.OK);
+    }
+
+    @PostMapping("/create-file/{parentId}")
+    public ResponseEntity<?> createFile(@PathVariable Long parentId,@RequestParam("file") MultipartFile file){
+        return new ResponseEntity<>(documentService.createFile(file,parentId), HttpStatus.OK);
     }
 
 }
