@@ -23,8 +23,12 @@ import java.util.zip.ZipOutputStream;
 
 @Component
 public class impDocument implements documentService {
-    @Autowired
     private documentRepository documentRepository;
+
+    @Autowired
+    public void setDocumentRepository(documentRepository documentRepository) {
+        this.documentRepository = documentRepository;
+    }
 
     private static final String UPLOAD_DIR = "uploads";
     private static final String ZIP_FILE_NAME = "va1.zip";
@@ -36,7 +40,11 @@ public class impDocument implements documentService {
 
         File dir = new File(uploadPath);
         if (!dir.exists()) {
-            dir.mkdirs();
+            boolean dirCreated = dir.mkdirs();
+            if (!dirCreated) {
+                // Xử lý lỗi khi không thể tạo thư mục
+                System.err.println("Failed to create upload directory: " + uploadPath);
+            }
         }
     }
 
@@ -129,22 +137,22 @@ public class impDocument implements documentService {
         if (document.isEmpty()) {
             throw new IllegalArgumentException("Not Found");
         }
-        documentEntity documentGeted = document.get();
-        System.out.println(documentGeted);
+        documentEntity documentGot = document.get();
+        System.out.println(documentGot);
 
         Optional<documentEntity> documentParent = documentRepository.findById(documentParentId);
         if (documentParent.isEmpty()) {
             throw new IllegalArgumentException("Not Found");
         }
-        documentEntity documentParentGeted = documentParent.get();
-        System.out.println(documentParentGeted);
+        documentEntity documentParentGot = documentParent.get();
+        System.out.println(documentParentGot);
 
-        documentGeted.setParentDocument(documentParentGeted);
-        documentRepository.save(documentGeted);
+        documentGot.setParentDocument(documentParentGot);
+        documentRepository.save(documentGot);
 
-        List<DocumentInterface> listChild = documentRepository.findByParentDocumentId(documentGeted.getId());
+        List<DocumentInterface> listChild = documentRepository.findByParentDocumentId(documentGot.getId());
 
-        return new documentResponse(documentGeted.getId(), documentGeted.getName(), documentGeted.getType(), Optional.ofNullable(documentGeted.getParentDocument().getId()), listChild);
+        return new documentResponse(documentGot.getId(), documentGot.getName(), documentGot.getType(), Optional.ofNullable(documentGot.getParentDocument().getId()), listChild);
     }
 
     @Override
@@ -156,12 +164,12 @@ public class impDocument implements documentService {
         if (document.isEmpty()) {
             throw new IllegalArgumentException("Not Found");
         }
-        documentEntity documentGeted = document.get();
-        System.out.println(documentGeted);
+        documentEntity documentGot = document.get();
+        System.out.println(documentGot);
 
-        List<DocumentInterface> listChild = documentRepository.findByParentDocumentId(documentGeted.getId());
+        List<DocumentInterface> listChild = documentRepository.findByParentDocumentId(documentGot.getId());
 
-        return new documentResponse(documentGeted.getId(), documentGeted.getName(), documentGeted.getType(), Optional.ofNullable(documentGeted.getParentDocument().getId()), listChild);
+        return new documentResponse(documentGot.getId(), documentGot.getName(), documentGot.getType(), Optional.ofNullable(documentGot.getParentDocument().getId()), listChild);
     }
 
     @Override
@@ -170,15 +178,15 @@ public class impDocument implements documentService {
         if (document.isEmpty()) {
             throw new IllegalArgumentException("Not Found");
         }
-        documentEntity documentGeted = document.get();
-        System.out.println(documentGeted);
+        documentEntity documentGot = document.get();
+        System.out.println(documentGot);
 
-        documentGeted.setName(nameDocument);
-        documentRepository.save(documentGeted);
+        documentGot.setName(nameDocument);
+        documentRepository.save(documentGot);
 
-        List<DocumentInterface> listChild = documentRepository.findByParentDocumentId(documentGeted.getId());
+        List<DocumentInterface> listChild = documentRepository.findByParentDocumentId(documentGot.getId());
 
-        return new documentResponse(documentGeted.getId(), documentGeted.getName(), documentGeted.getType(), Optional.ofNullable(documentGeted.getParentDocument().getId()), listChild);
+        return new documentResponse(documentGot.getId(), documentGot.getName(), documentGot.getType(), Optional.ofNullable(documentGot.getParentDocument().getId()), listChild);
     }
 
 }

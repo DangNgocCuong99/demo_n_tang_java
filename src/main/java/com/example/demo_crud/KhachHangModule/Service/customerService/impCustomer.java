@@ -9,7 +9,6 @@ import com.example.demo_crud.KhachHangModule.Entity.updateKeyRequest;
 import com.example.demo_crud.KhachHangModule.Mapping.mapKhachHangEntity;
 import com.example.demo_crud.KhachHangModule.repository.customerRepository;
 import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.Jws;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.security.Keys;
@@ -23,8 +22,12 @@ import java.util.stream.Collectors;
 
 @Component
 public class impCustomer implements customerService {
-    @Autowired
     private customerRepository customerRepository;
+
+    @Autowired
+    public void setCustomerRepository(customerRepository customerRepository) {
+        this.customerRepository = customerRepository;
+    }
     private static final String private_key = "key_vks_9999999999999999999999999999999999999";
 
     @Override
@@ -49,11 +52,11 @@ public class impCustomer implements customerService {
         customerEntity customerEntityNew = mapKhachHangEntity.mapResquestToEntity(customerRequest);
         customerEntityNew.setId(id);
         customerRepository.save(customerEntityNew);
-        return new customResponse("Update thafnh cong");
+        return new customResponse("Update thành công");
     }
 
     @Override
-    public customResponse updateKey(Long id, @org.jetbrains.annotations.NotNull updateKeyRequest key) {
+    public customResponse updateKey(Long id, updateKeyRequest key) {
         try {
             System.out.println("update key , id :" + id + ",key:" + key.getKey());
             Optional<customerEntity> userInfo = customerRepository.findById(id);
@@ -65,7 +68,6 @@ public class impCustomer implements customerService {
             customerRepository.save(customerEntityNew);
             return new customResponse("Update thanh cong");
         } catch (Exception e) {
-            e.printStackTrace();
             System.out.println(e.getMessage());
             return new customResponse("Update that bai");
         }
@@ -87,7 +89,7 @@ public class impCustomer implements customerService {
             String token = generateToken(user);
             return new LoginResponse("Đăng nhập thành công", token);
         } catch (Exception e) {
-            e.printStackTrace();
+            System.out.println(e.getMessage());
             return new LoginResponse("Đăng nhập thất bại", null);
         }
     }
@@ -112,11 +114,11 @@ public class impCustomer implements customerService {
                 .signWith(key, SignatureAlgorithm.HS256).compact();
     }
 
-    public Claims parseToken(String token) {
-        SecretKey key = Keys.hmacShaKeyFor(private_key.getBytes());
-        Jws<Claims> claimsJws = Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(token);
-        return claimsJws.getBody();
-    }
+//    public Claims parseToken(String token) {
+//        SecretKey key = Keys.hmacShaKeyFor(private_key.getBytes());
+//        Jws<Claims> claimsJws = Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(token);
+//        return claimsJws.getBody();
+//    }
 
 //    @Override
 //     public List<customerResponse> searchCustomer(String textSearch){

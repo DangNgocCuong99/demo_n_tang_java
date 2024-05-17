@@ -14,11 +14,14 @@ import java.util.Optional;
 
 @Component
 public class impVuAn implements vuAnService {
-    @Autowired
-    private vuAnRepository vuAnRepository;
+    private final vuAnRepository vuAnRepository;
+    private final documentRepository documentRepository;
 
     @Autowired
-    private documentRepository documentRepository;
+    public impVuAn(vuAnRepository vuAnRepository, documentRepository documentRepository) {
+        this.vuAnRepository = vuAnRepository;
+        this.documentRepository = documentRepository;
+    }
 
     @Override
     public List<vuAnEntity> getVuAn() {
