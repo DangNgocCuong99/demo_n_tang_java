@@ -1,6 +1,7 @@
 package com.example.demo_crud.KhachHangModule.Controller;
 
 import com.example.demo_crud.KhachHangModule.Entity.documentEntity;
+import com.example.demo_crud.KhachHangModule.Entity.documentRequest;
 import com.example.demo_crud.KhachHangModule.Entity.vuAnEntity;
 import com.example.demo_crud.KhachHangModule.Service.vuAnService.vuAnService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,7 +33,7 @@ public class vuAnController {
     }
 
     @PostMapping("/{vuAnId}/documents")
-    public ResponseEntity<?> createDocument(@PathVariable Long vuAnId, @RequestBody documentEntity newDocument) throws Exception {
+    public ResponseEntity<?> createDocument(@PathVariable Long vuAnId, @RequestBody documentRequest newDocument) throws Exception {
         return  new ResponseEntity<>(vuAnService.createDocument(vuAnId,newDocument),HttpStatus.OK);
     }
 }

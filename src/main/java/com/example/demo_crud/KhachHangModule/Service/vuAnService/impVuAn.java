@@ -1,6 +1,7 @@
 package com.example.demo_crud.KhachHangModule.Service.vuAnService;
 
 import com.example.demo_crud.KhachHangModule.Entity.documentEntity;
+import com.example.demo_crud.KhachHangModule.Entity.documentRequest;
 import com.example.demo_crud.KhachHangModule.Entity.vuAnEntity;
 
 import com.example.demo_crud.KhachHangModule.repository.documentRepository;
@@ -43,11 +44,18 @@ public class impVuAn implements vuAnService {
     }
 
     @Override
-    public documentEntity createDocument(long vuAnId, documentEntity newDocument) throws Exception {
+    public documentEntity createDocument(long vuAnId, documentRequest newDocument) throws Exception {
+        documentEntity documentSave = new documentEntity();
         Optional<vuAnEntity> vuAnOptional = vuAnRepository.findById(vuAnId);
-        if (vuAnOptional.isPresent()) {
-            newDocument.setVuAn(vuAnOptional.get());
-            return documentRepository.save(newDocument);
+        Optional<documentEntity> documentParent = documentRepository.findById(newDocument.getParent_document_id());
+        if (vuAnOptional.isPresent() && documentParent.isPresent()) {
+            documentSave.setVuAn(vuAnOptional.get());
+            documentSave.setParentDocument(documentParent.get());
+            documentSave.setName(newDocument.getName());
+            documentSave.setType(newDocument.getType());
+            documentSave.setUrl(newDocument.getUrl());
+            System.out.println(newDocument);
+            return documentRepository.save(documentSave);
         } else {
             throw new Exception("VuAn not found with ID: " + vuAnId);
         }

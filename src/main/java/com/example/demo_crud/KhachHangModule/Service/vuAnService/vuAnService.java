@@ -1,6 +1,7 @@
 package com.example.demo_crud.KhachHangModule.Service.vuAnService;
 
 import com.example.demo_crud.KhachHangModule.Entity.documentEntity;
+import com.example.demo_crud.KhachHangModule.Entity.documentRequest;
 import com.example.demo_crud.KhachHangModule.Entity.vuAnEntity;
 import org.springframework.stereotype.Service;
 
@@ -15,6 +16,6 @@ public interface vuAnService {
 
     vuAnEntity create (vuAnEntity vuAn);
 
-    documentEntity createDocument(long vuAnId, documentEntity newDocument) throws Exception;
+    documentEntity createDocument(long vuAnId, documentRequest newDocument) throws Exception;
 
 }

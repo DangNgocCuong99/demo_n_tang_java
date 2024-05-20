@@ -72,7 +72,7 @@ public class impDocument implements documentService {
 
             // Tạo URL để truy cập tệp tin
             String fileUrl = "/uploads/" + newFileName;
-//            return new customResponse("http://192.168.1.44:8082/document" + fileUrl);
+//            return new customResponse("http://192.168.1.50:8082/document" + fileUrl);
 
             return newFileName;
         } catch (IOException e) {
@@ -204,7 +204,7 @@ public class impDocument implements documentService {
         documentNew.setParentDocument(documentParentGot);
         documentNew.setName(fileName);
         documentNew.setType("file");
-        documentNew.setUrl("http://192.168.1.44:8082/document/uploads/"+fileName);
+        documentNew.setUrl("http://192.168.1.50:8082/document/uploads/"+fileName);
 
         documentEntity documentSave = documentRepository.save(documentNew);
 
