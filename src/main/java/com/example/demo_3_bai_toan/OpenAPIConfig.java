@@ -20,7 +20,7 @@ public class OpenAPIConfig {
     public OpenAPI myOpenAPI() {
         Server devServer = new Server();
         devServer.setUrl(devUrl);
-        devServer.setDescription("Server URL in Development environment");
+        devServer.setDescription("Server URL in Cuong");
 
         Info info = new Info()
                 .title("Tutorial Management API")
