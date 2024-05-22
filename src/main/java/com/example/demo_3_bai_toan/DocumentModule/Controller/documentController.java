@@ -1,8 +1,6 @@
 package com.example.demo_3_bai_toan.DocumentModule.Controller;
 
-import com.example.demo_3_bai_toan.DocumentModule.Entity.documentRequest;
-import com.example.demo_3_bai_toan.DocumentModule.Entity.moveDocumentRequest;
-import com.example.demo_3_bai_toan.DocumentModule.Entity.updateDocumentRequest;
+import com.example.demo_3_bai_toan.DocumentModule.Entity.*;
 import com.example.demo_3_bai_toan.DocumentModule.Service.documentService.documentService;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,7 +35,7 @@ public class documentController {
 //        return new ResponseEntity<>(documentService.uploadFile(file), HttpStatus.OK);
 //    }
 
-    @GetMapping("/uploads/{fileName:.+}")
+    @GetMapping("/file/{fileName:.+}")
     public ResponseEntity<Resource> downloadFile(@PathVariable String fileName) {
         try {
             // Xây dựng đường dẫn tới tệp tin
@@ -58,7 +56,7 @@ public class documentController {
     }
 
 
-    @GetMapping("/download")
+    @GetMapping("/download-zip")
     public void downloadImages(HttpServletResponse response) throws IOException {
         // Tạo file zip
         File zipFile = documentService.createZipFile();
@@ -82,33 +80,33 @@ public class documentController {
     }
 
     @GetMapping("/{id}")
-    public  ResponseEntity<?> getById(@PathVariable Long id){
+    public  ResponseEntity<documentResponse> getById(@PathVariable Long id){
         return new ResponseEntity<>(documentService.getDocument(id),HttpStatus.OK);
     }
 
     @PutMapping("/move/{id}")
-    public ResponseEntity<?> move(@PathVariable Long id,@RequestBody moveDocumentRequest documentParent){
+    public ResponseEntity<documentResponse> move(@PathVariable Long id,@RequestBody moveDocumentRequest documentParent){
         return new ResponseEntity<>(documentService.moveDocument(id,documentParent.getParentId()),HttpStatus.OK);
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<?> delete(@PathVariable Long id){
+    public ResponseEntity<documentResponse> delete(@PathVariable Long id){
         return new ResponseEntity<>(documentService.deleteDocument(id),HttpStatus.OK);
     }
 
     @PutMapping("/update/{id}")
-    public ResponseEntity<?> update(@PathVariable Long id,@RequestBody updateDocumentRequest document) {
+    public ResponseEntity<documentResponse> update(@PathVariable Long id,@RequestBody updateDocumentRequest document) {
         return new ResponseEntity<>(documentService.updateDocument(id,document.getName()), HttpStatus.OK);
     }
 
     @PostMapping("/create-file/{parentId}")
-    public ResponseEntity<?> createFile(@PathVariable Long parentId,@RequestParam("file") MultipartFile file){
+    public ResponseEntity<documentResponse> createFile(@PathVariable Long parentId,@RequestParam("file") MultipartFile file){
         return new ResponseEntity<>(documentService.createFile(file,parentId), HttpStatus.OK);
     }
 
-    @PostMapping("/create-folder/{vuAnId}")
-    public ResponseEntity<?> createDocument(@PathVariable Long vuAnId, @RequestBody documentRequest newDocument) throws Exception {
-        return  new ResponseEntity<>(documentService.createFolder(vuAnId,newDocument),HttpStatus.OK);
+    @PostMapping("/create-folder/{parentId}")
+    public ResponseEntity<documentEntity> createDocument(@PathVariable Long parentId, @RequestBody documentRequest newDocument) throws Exception {
+        return  new ResponseEntity<>(documentService.createFolder(parentId,newDocument),HttpStatus.OK);
     }
 
 }

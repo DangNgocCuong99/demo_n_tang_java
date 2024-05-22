@@ -11,4 +11,5 @@ import lombok.NoArgsConstructor;
 public class customerRequest {
     private String username;
     private String password;
+    private String private_key;
 }

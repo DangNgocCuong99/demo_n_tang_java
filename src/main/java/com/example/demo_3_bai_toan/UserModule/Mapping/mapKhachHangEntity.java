@@ -11,7 +11,7 @@ public class mapKhachHangEntity {
     public static userEntity mapResquestToEntity (customerRequest customerRequest){
         userEntity customer = new userEntity();
         customer.setUsername(customerRequest.getUsername());
-//        customer.setPrivate_key(customerRequest.getPrivate_key());
+        customer.setPrivate_key(customerRequest.getPrivate_key());
         customer.setPassword((customerRequest.getPassword()));
         return customer;
     }

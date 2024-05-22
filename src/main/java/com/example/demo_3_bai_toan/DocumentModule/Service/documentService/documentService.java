@@ -26,6 +26,6 @@ public interface documentService {
 
      documentResponse updateDocument(long documentId, String name);
 
-     documentEntity createFolder(long vuAnId, documentRequest newDocument) throws Exception;
+     documentEntity createFolder(long parentId, documentRequest newDocument) throws Exception;
 
 }

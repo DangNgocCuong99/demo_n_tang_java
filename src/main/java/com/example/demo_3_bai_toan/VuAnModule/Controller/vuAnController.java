@@ -1,6 +1,9 @@
 package com.example.demo_3_bai_toan.VuAnModule.Controller;
 
+import com.example.demo_3_bai_toan.UserModule.Entity.CustomRequest.updateKeyRequest;
+import com.example.demo_3_bai_toan.UserModule.Entity.CustomResponse.customResponse;
 import com.example.demo_3_bai_toan.VuAnModule.Entity.vuAnEntity;
+import com.example.demo_3_bai_toan.VuAnModule.Entity.vuAnOffline;
 import com.example.demo_3_bai_toan.VuAnModule.Entity.vuAnResponse;
 import com.example.demo_3_bai_toan.VuAnModule.Service.vuAnService.vuAnService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,10 +32,24 @@ public class vuAnController {
         return new ResponseEntity<>(vuAnService.getById(id), HttpStatus.OK);
     }
 
-    @PostMapping("/")
-    public ResponseEntity<?> create(@RequestBody vuAnEntity vuAn) {
+    @PostMapping("")
+    public ResponseEntity<vuAnResponse> create(@RequestBody vuAnEntity vuAn) {
         return new ResponseEntity<>(vuAnService.create(vuAn), HttpStatus.OK);
     }
-    
+
+    @GetMapping("/download/{id}")
+    public ResponseEntity<vuAnOffline> download(@PathVariable Long id) throws Exception {
+        return new ResponseEntity<>(vuAnService.download(id), HttpStatus.OK);
+    }
+
+    @PutMapping("/update/{id}")
+    public ResponseEntity<vuAnResponse> update(@PathVariable Long id, @RequestBody vuAnResponse vuAn) throws Exception {
+        return new ResponseEntity<>(vuAnService.update(id, vuAn), HttpStatus.OK);
+    }
+
+    @DeleteMapping("/delete/{id}")
+    public ResponseEntity<vuAnResponse> delete(@PathVariable Long id) throws Exception {
+        return new ResponseEntity<>(vuAnService.delete(id), HttpStatus.OK);
+    }
 }
 

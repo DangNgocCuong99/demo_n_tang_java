@@ -17,5 +17,6 @@ public class documentResponse {
     private String name;
     private String type;
     private Optional<Long> parentId;
+    private Optional<String> url;
     private List<DocumentInterface> childDocuments;
 }

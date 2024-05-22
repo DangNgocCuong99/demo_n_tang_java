@@ -19,7 +19,7 @@ import lombok.NoArgsConstructor;
 public class userEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long Id;
+    private Long id;
     private String username;
     private String password;
     private String private_key;

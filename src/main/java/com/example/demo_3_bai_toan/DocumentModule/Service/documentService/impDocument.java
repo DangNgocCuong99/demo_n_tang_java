@@ -75,7 +75,7 @@ public class impDocument implements documentService {
             Files.copy(file.getInputStream(), Path.of(uploadPath), StandardCopyOption.REPLACE_EXISTING);
 
             // Tạo URL để truy cập tệp tin
-            String fileUrl = "/uploads/" + newFileName;
+//            String fileUrl = "/file/" + newFileName;
 //            return new customResponse("http://192.168.1.50:8082/document" + fileUrl);
 
             return newFileName;
@@ -93,7 +93,7 @@ public class impDocument implements documentService {
 
         try (ZipOutputStream zipOut = new ZipOutputStream(new FileOutputStream(zipFile))) {
             // Lấy danh sách các file ảnh từ repository hoặc từ đâu đó
-            List<documentEntity> imageList = documentRepository.findAll();
+            List<documentEntity> imageList = documentRepository.findByType("file");
 
             for (documentEntity image : imageList) {
                 // Tạo entry trong file zip cho mỗi file ảnh
@@ -133,7 +133,7 @@ public class impDocument implements documentService {
 
         List<DocumentInterface> listChild = documentRepository.findByParentDocumentId(documentGeted.getId());
 
-        return new documentResponse(documentGeted.getId(), documentGeted.getName(), documentGeted.getType(), Optional.ofNullable(parentDocumentId), listChild);
+        return new documentResponse(documentGeted.getId(), documentGeted.getName(), documentGeted.getType(), Optional.ofNullable(parentDocumentId),null, listChild);
     }
 
     @Override
@@ -157,7 +157,7 @@ public class impDocument implements documentService {
 
         List<DocumentInterface> listChild = documentRepository.findByParentDocumentId(documentGot.getId());
 
-        return new documentResponse(documentGot.getId(), documentGot.getName(), documentGot.getType(), Optional.ofNullable(documentGot.getParentDocument().getId()), listChild);
+        return new documentResponse(documentGot.getId(), documentGot.getName(), documentGot.getType(), Optional.ofNullable(documentGot.getParentDocument().getId()), null,listChild);
     }
 
     @Override
@@ -175,7 +175,7 @@ public class impDocument implements documentService {
 
         List<DocumentInterface> listChild = documentRepository.findByParentDocumentId(documentGot.getId());
 
-        return new documentResponse(documentGot.getId(), documentGot.getName(), documentGot.getType(), Optional.ofNullable(documentGot.getParentDocument().getId()), listChild);
+        return new documentResponse(documentGot.getId(), documentGot.getName(), documentGot.getType(), Optional.ofNullable(documentGot.getParentDocument().getId()), null,listChild);
     }
 
     @Override
@@ -192,7 +192,7 @@ public class impDocument implements documentService {
 
         List<DocumentInterface> listChild = documentRepository.findByParentDocumentId(documentGot.getId());
 
-        return new documentResponse(documentGot.getId(), documentGot.getName(), documentGot.getType(), Optional.ofNullable(documentGot.getParentDocument().getId()), listChild);
+        return new documentResponse(documentGot.getId(), documentGot.getName(), documentGot.getType(), Optional.ofNullable(documentGot.getParentDocument().getId()),null, listChild);
     }
 
     @Override
@@ -208,19 +208,23 @@ public class impDocument implements documentService {
         documentNew.setParentDocument(documentParentGot);
         documentNew.setName(fileName);
         documentNew.setType("file");
-        documentNew.setUrl("http://192.168.1.50:8082/document/uploads/"+fileName);
+        documentNew.setUrl("http://192.168.1.50:8082/document/file/"+fileName);
 
         documentEntity documentSave = documentRepository.save(documentNew);
 
-        return new documentResponse(documentSave.getId(),documentSave.getName(),documentSave.getType(), Optional.ofNullable(documentSave.getParentDocument().getId()),new ArrayList<>());
+        return new documentResponse(documentSave.getId(),documentSave.getName(),documentSave.getType(), Optional.ofNullable(documentSave.getParentDocument().getId()), Optional.ofNullable(documentSave.getUrl()),new ArrayList<>());
     }
 
     @Override
-    public documentEntity createFolder(long vuAnId, documentRequest newDocument) throws Exception {
+    public documentEntity createFolder(long parentId, documentRequest newDocument) throws Exception {
+        Optional<documentEntity> documentParent = documentRepository.findById(parentId);
+        if(documentParent.isEmpty()){
+            throw new Exception("Not Found parent");
+        }
+
         documentEntity documentSave = new documentEntity();
-        Optional<vuAnEntity> vuAnOptional = vuAnRepository.findById(vuAnId);
-        Optional<documentEntity> documentParent = documentRepository.findById(newDocument.getParent_document_id());
-        if (vuAnOptional.isPresent() && documentParent.isPresent()) {
+        Optional<vuAnEntity> vuAnOptional = vuAnRepository.findById(documentParent.get().getVuAn().getId());
+        if (vuAnOptional.isPresent()) {
             documentSave.setVuAn(vuAnOptional.get());
             documentSave.setParentDocument(documentParent.get());
             documentSave.setName(newDocument.getName());
@@ -229,7 +233,7 @@ public class impDocument implements documentService {
             System.out.println(newDocument);
             return documentRepository.save(documentSave);
         } else {
-            throw new Exception("VuAn not found with ID: " + vuAnId);
+            throw new Exception("VuAn not found with ID: " + documentParent.get().getVuAn().getId());
         }
     }
 

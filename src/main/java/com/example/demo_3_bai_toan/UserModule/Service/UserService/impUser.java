@@ -41,36 +41,34 @@ public class impUser implements userService {
     }
 
     @Override
-    public customResponse addCustomer(customerRequest customerRequest) {
+    public userEntity addCustomer(customerRequest customerRequest) {
         userEntity userEntity = mapKhachHangEntity.mapResquestToEntity(customerRequest);
-        userRepository.save(userEntity);
-        return new customResponse("Thêm thành công");
+        return userRepository.save(userEntity);
     }
 
     @Override
-    public customResponse updateCustomer(Long id, customerRequest customerRequest) {
+    public userEntity updateCustomer(Long id, customerRequest customerRequest) {
         Optional<userEntity> customerEntity = userRepository.findById(id);
         if (customerEntity.isEmpty()) {
             throw new IllegalArgumentException("Not Found");
         }
         userEntity userEntityNew = mapKhachHangEntity.mapResquestToEntity(customerRequest);
         userEntityNew.setId(id);
-        userRepository.save(userEntityNew);
-        return new customResponse("Update thành công");
+        return  userRepository.save(userEntityNew);
     }
 
     @Override
     public customResponse updateKey(Long id, updateKeyRequest key) {
         try {
-            System.out.println("update key , id :" + id + ",key:" + key.getKey());
+            System.out.println("update key , id :" + id + ",key:" + key.getPrivate_key());
             Optional<userEntity> userInfo = userRepository.findById(id);
             if (userInfo.isEmpty()) {
                 throw new IllegalArgumentException("Not Found");
             }
             userEntity userEntityNew = userInfo.get();
-            userEntityNew.setPrivate_key(key.getKey());
+            userEntityNew.setPrivate_key(key.getPrivate_key());
             userRepository.save(userEntityNew);
-            return new customResponse("Update thanh cong");
+            return new customResponse("Update thanh cong , key:" + key);
         } catch (Exception e) {
             System.out.println(e.getMessage());
             return new customResponse("Update that bai");

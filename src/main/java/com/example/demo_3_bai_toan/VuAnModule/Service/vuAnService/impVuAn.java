@@ -1,10 +1,12 @@
 package com.example.demo_3_bai_toan.VuAnModule.Service.vuAnService;
 
 import com.example.demo_3_bai_toan.DocumentModule.Entity.documentEntity;
+import com.example.demo_3_bai_toan.DocumentModule.Interface.DocumentOfflineInterface;
 import com.example.demo_3_bai_toan.DocumentModule.Repository.documentRepository;
 import com.example.demo_3_bai_toan.UserModule.Entity.userEntity;
 import com.example.demo_3_bai_toan.UserModule.Repository.userRepository;
 import com.example.demo_3_bai_toan.VuAnModule.Entity.vuAnEntity;
+import com.example.demo_3_bai_toan.VuAnModule.Entity.vuAnOffline;
 import com.example.demo_3_bai_toan.VuAnModule.Entity.vuAnResponse;
 import com.example.demo_3_bai_toan.VuAnModule.Repository.vuAnRepository;
 import jakarta.annotation.PostConstruct;
@@ -75,8 +77,8 @@ public class impVuAn implements vuAnService {
         if (vuAnOptional.isEmpty()){
             throw new Exception("vu an khong ton tai");
         }
-        List<documentEntity> documentRoot = documentRepository.findByVuAnIdAndParentDocumentIsNull(vuAnOptional.get().getId());
-        return new vuAnResponse(vuAnOptional.get().getId(), vuAnOptional.get().getName(), vuAnOptional.get().getDescription(),documentRoot.get(0).getId());
+        documentEntity documentRoot = documentRepository.findByVuAnIdAndParentDocumentIsNull(vuAnOptional.get().getId());
+        return new vuAnResponse(vuAnOptional.get().getId(), vuAnOptional.get().getName(), vuAnOptional.get().getDescription(),documentRoot.getId());
 
     }
 
@@ -92,6 +94,44 @@ public class impVuAn implements vuAnService {
         return new vuAnResponse(vuAnNew.getId(),vuAnNew.getName(),vuAnNew.getDescription(),documentNew.getId());
     }
 
-    
+    @Override
+    public vuAnResponse update(Long id, vuAnResponse vuAnInfo) throws Exception {
+            Optional<vuAnEntity> vuAnOptional = vuAnRepository.findById(id);
+            if (vuAnOptional.isEmpty()){
+                throw new Exception("khong ton tai vu an");
+            }
+            vuAnEntity vuAnNew = new vuAnEntity();
+            vuAnNew.setId(vuAnOptional.get().getId());
+            vuAnNew.setName(vuAnInfo.getName());
+            vuAnNew.setDescription(vuAnInfo.getDescription());
+            vuAnEntity vuAnSave = vuAnRepository.save(vuAnNew);
+            documentEntity documentRoot = documentRepository.findByVuAnIdAndParentDocumentIsNull(vuAnSave.getId());
+            return new vuAnResponse(vuAnSave.getId(),vuAnSave.getName(),vuAnSave.getDescription(),documentRoot.getId());
+    }
+
+    @Override
+    public vuAnOffline download(Long id) throws Exception {
+        Optional<vuAnEntity> vuAnOptional = vuAnRepository.findById(id);
+        if (vuAnOptional.isEmpty()){
+            throw new Exception("vu an khong ton tai");
+        }
+        List<DocumentOfflineInterface> documents = documentRepository.findByVuAnId(vuAnOptional.get().getId());
+
+        documentEntity documentRoot = documentRepository.findByVuAnIdAndParentDocumentIsNull(vuAnOptional.get().getId());
+
+        return new vuAnOffline(vuAnOptional.get().getId(), vuAnOptional.get().getName(), vuAnOptional.get().getDescription(),documentRoot.getId(),documents);
+    }
+
+    @Override
+    public vuAnResponse delete(Long id) throws Exception {
+        Optional<vuAnEntity> vuAnOptional = vuAnRepository.findById(id);
+        if (vuAnOptional.isEmpty()){
+            throw new Exception("vu an khong ton tai");
+        }
+        documentEntity document = documentRepository.findByVuAnIdAndParentDocumentIsNull(vuAnOptional.get().getId());
+        documentRepository.delete(document);
+        return new vuAnResponse(vuAnOptional.get().getId(),vuAnOptional.get().getName(),vuAnOptional.get().getDescription(),document.getId());
+    }
+
 
 }

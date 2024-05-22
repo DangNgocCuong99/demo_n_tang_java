@@ -3,6 +3,7 @@ package com.example.demo_3_bai_toan.UserModule.Service.UserService;
 import com.example.demo_3_bai_toan.UserModule.Entity.CustomResponse.LoginResponse;
 import com.example.demo_3_bai_toan.UserModule.Entity.CustomResponse.customResponse;
 import com.example.demo_3_bai_toan.UserModule.Entity.CustomRequest.customerRequest;
+import com.example.demo_3_bai_toan.UserModule.Entity.userEntity;
 import com.example.demo_3_bai_toan.UserModule.Entity.userResponse;
 import com.example.demo_3_bai_toan.UserModule.Entity.CustomRequest.updateKeyRequest;
 import org.springframework.stereotype.Service;
@@ -13,9 +14,9 @@ import java.util.List;
 public interface userService {
     List<userResponse> getCustomer();
 
-    customResponse addCustomer(customerRequest customerRequest);
+    userEntity addCustomer(customerRequest customerRequest);
 
-    customResponse updateCustomer(Long id, customerRequest customerRequest);
+    userEntity updateCustomer(Long id, customerRequest customerRequest);
 
     customResponse deleteCustomer(Long id);
 

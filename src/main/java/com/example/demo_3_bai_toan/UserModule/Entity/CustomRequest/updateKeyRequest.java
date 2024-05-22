@@ -7,5 +7,5 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class updateKeyRequest {
-    private String key;
+    private String private_key;
 }
