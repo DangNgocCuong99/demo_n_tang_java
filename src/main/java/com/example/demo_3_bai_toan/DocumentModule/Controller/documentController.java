@@ -5,7 +5,6 @@ import com.example.demo_3_bai_toan.DocumentModule.Entity.moveDocumentRequest;
 import com.example.demo_3_bai_toan.DocumentModule.Entity.updateDocumentRequest;
 import com.example.demo_3_bai_toan.DocumentModule.Service.documentService.documentService;
 import jakarta.servlet.http.HttpServletResponse;
-import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
@@ -13,7 +12,6 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -23,9 +21,10 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.net.MalformedURLException;
 import java.nio.file.Path;
+import io.swagger.v3.oas.annotations.tags.Tag;
 
-@Controller
-@CrossOrigin
+@Tag(name = "Document", description = "Document management APIs")
+@RestController
 @RequestMapping("/document")
 public class documentController {
     @Autowired
@@ -88,7 +87,7 @@ public class documentController {
     }
 
     @PutMapping("/move/{id}")
-    public ResponseEntity<?> move(@PathVariable Long id,@RequestBody @NotNull moveDocumentRequest documentParent){
+    public ResponseEntity<?> move(@PathVariable Long id,@RequestBody moveDocumentRequest documentParent){
         return new ResponseEntity<>(documentService.moveDocument(id,documentParent.getParentId()),HttpStatus.OK);
     }
 

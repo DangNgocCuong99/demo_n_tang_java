@@ -75,16 +75,21 @@ public class impVuAn implements vuAnService {
         if (vuAnOptional.isEmpty()){
             throw new Exception("vu an khong ton tai");
         }
-        List<documentEntity> documentOptional = documentRepository.findByVuAnIdAndParentDocumentIsNull(vuAnOptional.get().getId());
-        vuAnResponse vuAnResponse = new vuAnResponse(vuAnOptional.get().getId(), vuAnOptional.get().getName(), vuAnOptional.get().getDescription(),documentOptional.get(0).getId());
-        return vuAnResponse;
+        List<documentEntity> documentRoot = documentRepository.findByVuAnIdAndParentDocumentIsNull(vuAnOptional.get().getId());
+        return new vuAnResponse(vuAnOptional.get().getId(), vuAnOptional.get().getName(), vuAnOptional.get().getDescription(),documentRoot.get(0).getId());
 
     }
 
     @Override
-    public vuAnEntity create(vuAnEntity vuAn) {
+    public vuAnResponse create(vuAnEntity vuAn) {
+        vuAnEntity vuAnNew = vuAnRepository.save(vuAn);
+        documentEntity documentEntity = new documentEntity();
+        documentEntity.setName("root_"+vuAnNew.getName());
+        documentEntity.setType("folder");
+        documentEntity.setVuAn(vuAnNew);
+        documentEntity documentNew = documentRepository.save(documentEntity);
 
-        return vuAnRepository.save(vuAn);
+        return new vuAnResponse(vuAnNew.getId(),vuAnNew.getName(),vuAnNew.getDescription(),documentNew.getId());
     }
 
     

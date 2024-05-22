@@ -13,7 +13,7 @@ public interface vuAnService {
 
     vuAnResponse getById(Long id) throws Exception;
 
-    vuAnEntity create (vuAnEntity vuAn);
+    vuAnResponse create (vuAnEntity vuAn);
 
 
 }

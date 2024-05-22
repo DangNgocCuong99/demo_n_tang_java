@@ -15,6 +15,5 @@ public interface documentRepository extends JpaRepository<documentEntity,Long > 
 
     List<DocumentInterface> findByParentDocumentId(Long parentDocumentId);
 
-    @Query("SELECT d FROM documentEntity d WHERE d.vuAn.id = :vuAnId AND d.parentDocument IS NULL")
     List<documentEntity> findByVuAnIdAndParentDocumentIsNull(@Param("vuAnId") Long vuAnId);
 }
