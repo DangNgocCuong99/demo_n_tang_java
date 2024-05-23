@@ -203,8 +203,14 @@ public class impDocument implements documentService {
         }
         documentEntity documentParentGot = documentParent.get();
 
+        Optional<vuAnEntity> vuAnOptional = vuAnRepository.findById(documentParent.get().getVuAn().getId());
+        if (vuAnOptional.isEmpty()) {
+            throw new IllegalArgumentException("vu an khong ton tai");
+        }
+
         String fileName = uploadFile(file);
         documentEntity documentNew = new documentEntity();
+        documentNew.setVuAn(vuAnOptional.get());
         documentNew.setParentDocument(documentParentGot);
         documentNew.setName(fileName);
         documentNew.setType("file");

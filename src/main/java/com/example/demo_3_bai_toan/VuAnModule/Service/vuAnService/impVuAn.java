@@ -34,7 +34,7 @@ public class impVuAn implements vuAnService {
     public void intData (){
         try {
             vuAnEntity vuAnEntity = new vuAnEntity();
-            vuAnEntity.setName("vu an 1");
+            vuAnEntity.setName("vu_an_11");
             vuAnEntity.setDescription("vu an 1");
             vuAnEntity vuAnNew = vuAnRepository.save(vuAnEntity);
             if (vuAnNew.getId() == null) {
