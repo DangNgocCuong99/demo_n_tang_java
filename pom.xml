@@ -9,9 +9,10 @@
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
     <groupId>com.example</groupId>
-    <artifactId>demo_CRUD</artifactId>
+    <artifactId>demo_3_bai_toan</artifactId>
     <version>0.0.1-SNAPSHOT</version>
-    <name>demo_CRUD</name>
+    <name>demo_3_bai_toan</name>
+    <packaging>jar</packaging>
     <description>demo_CRUD</description>
     <properties>
         <java.version>17</java.version>
@@ -84,14 +85,11 @@
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
-                <configuration>
-                    <excludes>
-                        <exclude>
-                            <groupId>org.projectlombok</groupId>
-                            <artifactId>lombok</artifactId>
-                        </exclude>
-                    </excludes>
-                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-resources-plugin</artifactId>
+                <version>3.3.1</version>
             </plugin>
         </plugins>
     </build>

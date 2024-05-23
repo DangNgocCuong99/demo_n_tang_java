@@ -125,7 +125,7 @@ public class impVuAn implements vuAnService {
     @Override
     public vuAnResponse delete(Long id) throws Exception {
         Optional<vuAnEntity> vuAnOptional = vuAnRepository.findById(id);
-        if (vuAnOptional.isEmpty()){
+            if (vuAnOptional.isEmpty()){
             throw new Exception("vu an khong ton tai");
         }
         documentEntity document = documentRepository.findByVuAnIdAndParentDocumentIsNull(vuAnOptional.get().getId());
