@@ -130,6 +130,7 @@ public class impVuAn implements vuAnService {
         }
         documentEntity document = documentRepository.findByVuAnIdAndParentDocumentIsNull(vuAnOptional.get().getId());
         documentRepository.delete(document);
+        vuAnRepository.delete(vuAnOptional.get());
         return new vuAnResponse(vuAnOptional.get().getId(),vuAnOptional.get().getName(),vuAnOptional.get().getDescription(),document.getId());
     }
 
