@@ -88,7 +88,7 @@ public class impDocument implements documentService {
     }
 
     @Override
-    public File createZipFile() throws IOException {
+    public File createZipFile(Long vuAnId) throws IOException {
         String currentDir = System.getProperty("user.dir");
         String uploadPath = currentDir + File.separator + UPLOAD_DIR;
 
@@ -96,9 +96,9 @@ public class impDocument implements documentService {
 
         try (ZipOutputStream zipOut = new ZipOutputStream(new FileOutputStream(zipFile))) {
             // Lấy danh sách các file ảnh từ repository hoặc từ đâu đó
-            List<documentEntity> imageList = documentRepository.findByType("file");
+            List<DocumentInterface> imageList = documentRepository.findByVuAnIdAndType(vuAnId,"file");
 
-            for (documentEntity image : imageList) {
+            for (DocumentInterface image : imageList) {
                 // Tạo entry trong file zip cho mỗi file ảnh
                 zipOut.putNextEntry(new ZipEntry(image.getName()));
 

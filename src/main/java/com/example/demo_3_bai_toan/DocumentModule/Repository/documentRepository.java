@@ -20,4 +20,8 @@ public interface documentRepository extends JpaRepository<documentEntity,Long > 
     List<documentEntity> findByType(String type);
 
     List<DocumentOfflineInterface> findByVuAnId(@Param("vuAnId") Long vuAnId);
+
+    List<DocumentInterface> findByVuAnIdAndType(@Param("vuAnId") Long vuAnId ,@Param("type") String type );
+
+
 }
