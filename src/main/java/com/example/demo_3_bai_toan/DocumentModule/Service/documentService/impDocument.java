@@ -9,6 +9,7 @@ import com.example.demo_3_bai_toan.DocumentModule.Repository.documentRepository;
 import com.example.demo_3_bai_toan.VuAnModule.Repository.vuAnRepository;
 import jakarta.annotation.PostConstruct;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -25,6 +26,8 @@ import java.util.zip.ZipOutputStream;
 
 @Component
 public class impDocument implements documentService {
+    @Value("${bezkoder.openapi.dev-url}")
+    private String devUrl;
     private final vuAnRepository vuAnRepository;
     private final documentRepository documentRepository;
     @Autowired
@@ -214,7 +217,7 @@ public class impDocument implements documentService {
         documentNew.setParentDocument(documentParentGot);
         documentNew.setName(fileName);
         documentNew.setType("file");
-        documentNew.setUrl("http://192.168.1.50:8082/document/file/"+fileName);
+        documentNew.setUrl(devUrl+"/document/file/"+fileName);
 
         documentEntity documentSave = documentRepository.save(documentNew);
 
