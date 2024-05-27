@@ -56,10 +56,10 @@ public class documentController {
     }
 
 
-    @GetMapping("/download-zip")
-    public void downloadImages(HttpServletResponse response) throws IOException {
+    @GetMapping("/download-zip/{vuAnId}")
+    public void downloadImages(@PathVariable Long vuAnId,HttpServletResponse response) throws IOException {
         // Tạo file zip
-        File zipFile = documentService.createZipFile();
+        File zipFile = documentService.createZipFile(vuAnId);
 
         // Thiết lập thông tin response
         response.setContentType("application/zip");

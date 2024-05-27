@@ -16,7 +16,7 @@ public interface documentService {
 
      documentResponse createFile(MultipartFile file , long parentId);
 
-     File createZipFile() throws IOException;
+     File createZipFile(Long vuAnId) throws IOException;
 
      documentResponse getDocument(long documentId);
 
@@ -27,5 +27,6 @@ public interface documentService {
      documentResponse updateDocument(long documentId, String name);
 
      documentEntity createFolder(long parentId, documentRequest newDocument) throws Exception;
+
 
 }
